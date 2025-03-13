@@ -1,0 +1,44 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: kc
+      POSTGRES_PASSWORD: kcpass
+      POSTGRES_DB: kcdb
+    ports:
+      - "5432:5432"
+    tmpfs:
+      - /var/lib/postgresql/data
+    networks:
+      - backend
+
+  internal_service:
+    build: ./nodegreet
+    container_name: internal_service
+    depends_on:
+      - postgres
+    environment:
+      - DB_HOST=postgres
+      - DB_USER=kc
+      - DB_PASSWORD=kcpass
+      - DB_NAME=kcdb
+    networks:
+      - backend
+
+  client_app:
+    build: ./nodegreet-gateway
+    container_name: client-app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - internal_service
+    environment:
+      - INTERNAL_SERVICE_URL=http://internal_service:4000
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge

@@ -1,0 +1,15 @@
+docker run --rm --name my_postgres \
+  -e POSTGRES_USER=kc \
+  -e POSTGRES_PASSWORD=kcpass \
+  -e POSTGRES_DB=kcdb \
+  -p 5432:5432 \
+  --tmpfs /var/lib/postgresql/data \
+  -d postgres
+
+
+Design a simple PostgreSQL schema for tasks with at least the following fields:
+id (auto-incrementing integer or UUID).
+title (string, required).
+description (string, optional).
+created_at (timestamp).
+updated_at (timestamp, nullable).
