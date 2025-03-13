@@ -7,12 +7,10 @@ services:
       POSTGRES_USER: kc
       POSTGRES_PASSWORD: kcpass
       POSTGRES_DB: kcdb
-    ports:
-      - "5432:5432"
     tmpfs:
       - /var/lib/postgresql/data
     networks:
-      - backend
+      - backend  # Only accessible within backend network
 
   internal_service:
     build: ./nodegreet
@@ -25,7 +23,8 @@ services:
       - DB_PASSWORD=kcpass
       - DB_NAME=kcdb
     networks:
-      - backend
+      - backend   # Can access PostgreSQL
+      - frontend  # Can communicate with client app
 
   client_app:
     build: ./nodegreet-gateway
@@ -37,8 +36,10 @@ services:
     environment:
       - INTERNAL_SERVICE_URL=http://internal_service:4000
     networks:
-      - backend
+      - frontend  # Can access internal service, but NOT PostgreSQL
 
 networks:
   backend:
+    driver: bridge
+  frontend:
     driver: bridge
