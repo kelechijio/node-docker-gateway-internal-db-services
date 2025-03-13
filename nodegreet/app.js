@@ -13,7 +13,7 @@ app.use(express.json());
 // PostgreSQL Connection
 const pool = new Pool({
     user: process.env.POSTGRES_USER || 'kc',
-    host: process.env.DB_HOST || 'localhost',
+    host: process.env.DB_HOST || 'postgres',
     database: process.env.POSTGRES_DB || 'kcdb',
     password: process.env.POSTGRES_PASSWORD || 'kcpass',
     port: 5432,
